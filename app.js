@@ -13,7 +13,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp', {useNewUrlParser: true,}
         console.log("OH NO ERROR!!")
         console.log(err)
     })
-    
+
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', ()=> {
@@ -28,10 +28,9 @@ app.get('/', (req, res) => {
     res.render('home')
 })
 
-app.get('/makecampground', async(req, res) => {
-    const camp = new Campground({title: 'My backyard', description: 'cheap camping'});
-    await camp.save();
-    res.send(camp)
+app.get('/campgrounds', async(req, res) => {
+    const campgrounds = await Campground.find({});
+    res.render('campgrounds/index', {campgrounds})
 })
 
 app.listen(3000, () => {
