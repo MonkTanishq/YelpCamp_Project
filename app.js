@@ -44,6 +44,16 @@ const validateCampground = (req, res, next) => {
     }
 }
 
+const validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400)
+    } else {
+        next();
+    }
+}
+
 app.get('/', (req, res) => {
     res.render('home')
 });
@@ -97,12 +107,12 @@ app.post('/campgrounds/:id/reviews', validateReview, catchAsync(async (req, res)
     res.redirect(`/campgrounds/${campground._id}`);
 }))
 
-// app.delete('/campgrounds/:id/reviews/:reviewId', catchAsync(async (req, res) => {
-//     const { id, reviewId } = req.params;
-//     await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
-//     await Review.findByIdAndDelete(reviewId);
-//     res.redirect(`/campgrounds/${id}`);
-// }))
+app.delete('/campgrounds/:id/reviews/:reviewId', catchAsync(async (req, res) => {
+    const { id, reviewId } = req.params;
+    await Campground.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/campgrounds/${id}`);
+}))
 
 app.all('*', (req, res, next) => {
     next(new ExpressError('Page Not Found', 404))
@@ -111,7 +121,7 @@ app.all('*', (req, res, next) => {
 app.use((err, req, res, next) => {
     const {statusCode = 500 } =  err; 
     if(!err.message) err.message = 'Oh No, Something Went Wrong!!'
-    res.status(statusCode).render('error', {err});
+    res.status(statusCode).render('error', {err})
 })
 
 app.listen(3000, () => {
