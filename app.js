@@ -7,6 +7,9 @@ const flash = require('connect-flash');
 const Joi = require('joi');
 const ExpressError =  require('./utils/ExpressError');
 const methodOverride = require('method-override');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+const User = require('./models/user');
 const {transcode} = require('buffer');
 
 const campgrounds = require('./routes/campgrounds');
@@ -50,6 +53,16 @@ const sessionConfig = {
 }
 app.use(session(sessionConfig))
 app.use(flash());
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+
+//How to serialize user - serialization refers to basically "how do we store a user in the session."
+passport.serializeUser(User.serializeUser());
+
+//Deserialization - how do you get a user out of that session.
+passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
     res.locals.success = req.flash('success');
