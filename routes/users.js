@@ -35,7 +35,7 @@ router.get('/login', (req, res) => {
  // Now we can use res.locals.returnTo to redirect the user after login
 router.post('/login', storeReturnTo, passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
     req.flash('success', 'welcome back!');
-    const redirectUrl = req.locals.returnTo || '/campgrounds';
+    const redirectUrl = req.session.returnTo || '/campgrounds';
     delete req.session.returnTo;
     res.redirect(redirectUrl);
 })

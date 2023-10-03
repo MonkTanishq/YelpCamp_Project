@@ -13,7 +13,7 @@ module.exports.isLoggedIn = (req, res, next) => {
     next();
 }
 
-const validateCampground = (req, res, next) => {
+module.exports.validateCampground = (req, res, next) => {
     const { error } = campgroundSchema.validate(req.body);
     if (error) {
         const msg = error.details.map(el => el.message).join(',')
@@ -32,7 +32,6 @@ module.exports.isAuthor = async (req, res, next) => {
     }
     next();
 }
-
 
 module.exports.isReviewAuthor = async (req, res, next) => {
     const { id, reviewId } = req.params;

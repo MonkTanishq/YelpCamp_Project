@@ -8,9 +8,17 @@ const CampgroundSchema = new Schema({
     price: Number,
     description: String,
     location: String,
-    author: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
+    //Below short code will generate a error thats why after that we write the code which is correct.
+    // author: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'User'
+    // },
+    author :{
+        id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        },
+        username: String
     },
     reviews: [
         {
