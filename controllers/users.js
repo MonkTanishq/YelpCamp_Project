@@ -41,8 +41,14 @@ module.exports.login = (req, res) => {
 // })
 
 //Above Commented Piece of code will give error sometimes because of passport.js is updated. So the below code will be work correctly.
-module.exports.logout = (req, res) => {
-    req.logout();
-    req.flash('success', "Goodbye!");
-    res.redirect('/campgrounds');
+module.exports.logout = (req, res, next) => {
+    req.logout(function (err) 
+    {
+        if (err) 
+        {
+          return next(err);
+        }
+        req.flash('success', "Goodbye!");
+        res.redirect('/campgrounds');
+    });
 }
