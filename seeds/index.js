@@ -33,7 +33,7 @@ const seedDB = async ()=> {
             title: `${sample(descriptors)} ${sample(places)}`,
             description: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry',
             price,
-            images: [
+            images:[
                 {
                     url: 'https://res.cloudinary.com/dm8lqw9fc/image/upload/v1696341895/YelpCamp/pjinthnfaqy2y1m36ksk.jpg',
                     filename: 'YelpCamp/pjinthnfaqy2y1m36ksk'

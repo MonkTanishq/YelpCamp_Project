@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const Review = require('./review')
 const Schema = mongoose.Schema;
 
+
+// https://res.cloudinary.com/douqbebwk/image/upload/w_300/v1600113904/YelpCamp/gxgle1ovzd2f3dgcpass.png
+
 const ImageSchema = new Schema({
     url: String,
     filename: String
@@ -13,15 +16,10 @@ ImageSchema.virtual('thumbnail').get(function () {
 
 const CampgroundSchema = new Schema({
     title: String,
-    image: [ImageSchema],
+    images: [ImageSchema],
     price: Number,
     description: String,
     location: String,
-    //Below short code will generate a error thats why after that we write the code which is correct.
-    // author: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'User'
-    // },
     author :{
         id: {
             type: mongoose.Schema.Types.ObjectId,
@@ -37,6 +35,8 @@ const CampgroundSchema = new Schema({
     ]
 });
 
+
+
 CampgroundSchema.post('findOneAndDelete', async function (doc) {
     if (doc) {
         await Review.deleteMany({
@@ -48,3 +48,29 @@ CampgroundSchema.post('findOneAndDelete', async function (doc) {
 })
 
 module.exports = mongoose.model('Campground', CampgroundSchema);
+
+
+
+
+
+
+
+
+    //Below short code will generate a error thats why after that we write the code which is correct.
+    // author: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'User'
+    // },
+    // author :{
+    //     id: {
+    //         type: mongoose.Schema.Types.ObjectId,
+    //         ref: 'User'
+    //     },
+    //     username: String
+    // },
+    // reviews: [
+    //     {
+    //         type: Schema.Types.ObjectId,
+    //         ref: 'Review'
+    //     }
+    // ]
