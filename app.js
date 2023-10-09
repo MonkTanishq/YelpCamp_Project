@@ -17,11 +17,15 @@ const User = require('./models/user');
 const helmet = require('helmet');
 const {transcode} = require('buffer');
 
+const MongoStore = require('connect-mongo');
 const mongoSanitize = require('express-mongo-sanitize');
 
 const userRoutes = require('./routes/users');
 const campgroundRoutes = require('./routes/campgrounds');
 const reviewRoutes = require('./routes/reviews'); 
+
+const dbUrl = 'mongodb://127.0.0.1:27017/yelp-camp';//process.env.DB_URL;
+//'mongodb://127.0.0.1:27017/yelp-camp'
 
 mongoose.set('strictQuery', true);
 mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp', {useNewUrlParser: true,})
@@ -52,8 +56,20 @@ app.use(mongoSanitize({
     replaceWith: '_'
 }))
 
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret: 'thisshouldbeabettersecret!'
+    }
+});
+
+store.on("error", function (e) {
+    console.log("SESSION STORE ERROR", e)
+})
 
 const sessionConfig = {
+    store,
     name: 'session',
     secret: 'thisshouldbeabettersecret!',
     resave: false,
@@ -70,12 +86,14 @@ app.use(flash());
 app.use(helmet());
 
 const scriptSrcUrls = [
+    "https://stackpath.bootstrapcdn.com",
     "https://www.bootstrapcdn.com/",
     "https://kit.fontawesome.com/",
     "https://cdnjs.cloudflare.com/",
     "https://cdn.jsdelivr.net",
 ];
 const styleSrcUrls = [
+    "https://stackpath.bootstrapcdn.com",
     "https://kit-free.fontawesome.com/",
     "https://www.bootstrapcdn.com/",
     "https://cdn.jsdelivr.net",
